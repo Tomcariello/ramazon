@@ -1,0 +1,23 @@
+{
+  "name": "ramazon",
+  "version": "1.0.0",
+  "description": "store & management software",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tomcariello/ramazon.git"
+  },
+  "author": "tom cariello",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tomcariello/ramazon/issues"
+  },
+  "homepage": "https://github.com/Tomcariello/ramazon#readme",
+  "dependencies": {
+    "mysql": "^2.11.1",
+    "prompt": "^1.0.0"
+  }
+}
