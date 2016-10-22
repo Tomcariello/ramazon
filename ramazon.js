@@ -35,25 +35,35 @@ function printInventory() {
 }
 
 function promptUser() {
- prompt.get([{
+ prompt.get({
       name: 'ID',
       description: ("What is the ID of the item you would like to buy?"),
       required: true
-    }, {
-      name: 'quantity',
-      description: ('How many would you like?'),
-      required: true,
-      conform: function (value) {
-        return true;
-      }
-    }], function (err, result) {
-    // 
-    // Log the results. 
-    // 
-    console.log('Command-line input received:');
-    console.log('  ID is ' + result.ID);
-    console.log('  Qunatity is ' + result.quantity);
-  });
+    }, function (err, result) {
+    
+    //Confirm selection is valid
+      connection.query('SELECT * FROM product',function(err,res){
+        if(err) throw err;
+
+        for (var i=0; i < res.length; i++) {
+          if (parseInt(result.ID) === parseInt(res[i].ItemID)) {
+            console.log("That is a valid selection");
+
+            prompt.get({
+              name: 'quantity',
+              description: ('How many would you like?'),
+              required: true,
+              },  function (err, result) {
+                console.log('  ID is ' + result.ID);
+                console.log('  Qunatity is ' + result.quantity);
+              })
+          } else {
+            console.log("Invalid Selection");
+          }
+        }
+      })
+    })
+
 }
 
 printInventory();
