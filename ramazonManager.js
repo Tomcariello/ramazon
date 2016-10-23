@@ -44,7 +44,7 @@ function promptUser() {
             break;
         //add new product
         case 4:
-            printInventory();
+            addNewProduct();
             break;
     }
   })
@@ -113,9 +113,33 @@ function AddInventory() {
   })
 }
 
-function makeSale(ItemID, resultingQuantity) {
-  ItemID = ItemID + 1;
-  var query = "UPDATE product SET StockQuantity=" + resultingQuantity + " WHERE ItemID=" + ItemID;
-  connection.query(query,function(err,res){
-  });
+function addNewProduct() {
+  prompt.get([
+    {
+      name: 'name',
+      description: ('Enter new item name'),
+      required: true,
+    }, {
+      name: 'department',
+      description: ('Enter department'),
+      required: true,
+    }, {
+      name: 'price',
+      description: ('Enter price'),
+      required: true,
+    }, {
+      name: 'stock',
+      description: ('Enter stock'),
+      required: true,
+    }], function (err, result) {
+      // console.log(result.name, result.department, result.price, result.stock);
+
+      //The string below works perfectly through workbench but nothing works in node
+      var query = "INSERT INTO product (ProductName, DepartmentName, Price, StockQuantity) VALUES ('" + result.name + "','" + result.department + "'," + parseFloat(result.price) + "," + parseInt(result.stock) + ");";
+      // console.log(query);
+      connection.query(query, function(err, result) {
+        if (err) throw err;
+        console.log("Item added.");
+      });
+  })
 }
