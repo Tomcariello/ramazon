@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Tomcariello/ramazon#readme",
   "dependencies": {
+    "console.table": "^0.7.0",
     "mysql": "^2.11.1",
     "prompt": "^1.0.0"
   }

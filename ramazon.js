@@ -14,7 +14,6 @@ var connection = mysql.createConnection({
 // connection.connect(function(err) {
 //     if (err) throw err;
 //     console.log("connected as id " + connection.threadId);
-//     // start();
 // })
 
 
@@ -22,7 +21,7 @@ function printInventory() {
     connection.query('SELECT * FROM product',function(err,res){
       if(err) throw err;
 
-      console.log('All Data received from Db:\n');
+      console.log('What would you like to buy?\n');
 
       for (var i=0; i < res.length; i++) {
          console.log(res[i].ItemID + " | " + res[i].ProductName + " | " + res[i].DepartmentName + "|" + res[i].Price);
@@ -70,11 +69,10 @@ function getQuantity(itemIDBeingPurchased,res) {
         // console.log("We have " + res[itemIDBeingPurchased].StockQuantity + " of that in stock!");
         resultingQuantity = res[itemIDBeingPurchased].StockQuantity - result.quantity;
         makeSale(itemIDBeingPurchased,resultingQuantity);
-        printBill(res[itemIDBeingPurchased].Price,result.quantity)
+        printBill(res[itemIDBeingPurchased].Price, result.quantity, res[itemIDBeingPurchased].DepartmentName)
       } else {
         console.log("Insufficient quantity.")
       }
-      //check inventory levels
     })
 }
 
@@ -84,12 +82,29 @@ function makeSale(ItemID, resultingQuantity) {
   //UPDATE product SET StockQuantity=20 WHERE ItemID=3 
   var query = "UPDATE product SET StockQuantity=" + resultingQuantity + " WHERE ItemID=" + ItemID;
   connection.query(query,function(err,res){
-    // console.log(res);
+    if(err) throw err;
   });
 }
 
-function printBill(cost,quantity) {
+function printBill(cost,quantity,DepartmentName) {
+  console.log('----------------------------------------------------');
   console.log("Thank you! Your total cost is " + cost * quantity);
+  console.log('----------------------------------------------------');
+  //Determine the totalsales for this department
+  var query = "Select * from departments WHERE DepartmentName='" + DepartmentName + "';";
+  connection.query(query,function(err,res){
+    if(err) throw err;
+    var currentTotal = res[0].TotalSales;
+    var newTotal = currentTotal + cost;
+
+    //update Departments table
+    // var newQuery = "Select * from departments WHERE DepartmentName='" + DepartmentName + "';";
+    var newQuery = "UPDATE departments SET TotalSales=" + newTotal + " WHERE DepartmentName='" + DepartmentName + "';";
+    connection.query(newQuery,function(err,res){
+      if(err) throw err;
+    });
+  });
+  printInventory();
 }
 
 printInventory();
